@@ -1,20 +1,17 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use wbraganca\dynamicform\DynamicFormWidget;
 use frontend\models\Item;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 $options = Yii::$app->params['bs5_floating_label_options'];
 $template = Yii::$app->params['bs5_floating_label_template'];
 $item = ArrayHelper::map(Item::find()->where(['record_status'=>1])->all(),'id','name');
-/** @var yii\web\View $this */
-/** @var frontend\models\Customer $model */
-/** @var yii\widgets\ActiveForm $form */
+$get_rate = Url::to(['/item/get-rate', 'id' => '']);
 ?>
 
 <div class="customer-form">
-
     <?php $form = ActiveForm::begin(['id'=>'dynamic-form']); ?>
     <section class="section1">
         <label class='header-label'>Customer Details</label>
@@ -79,16 +76,16 @@ $item = ArrayHelper::map(Item::find()->where(['record_status'=>1])->all(),'id','
                                                 <span class="panel-title"><?= ($i + 1) ?></span>
                                             </div>
                                             <div class="col-sm-4">
-                                                <?= $form->field($modelRegistrationItem, "[{$i}]item_id")->dropDownList($item,['prompt'=>'--Select--'])->label(false) ?>
+                                                <?= $form->field($modelRegistrationItem, "[{$i}]item_id")->dropDownList($item,['prompt'=>'--Select--','class'=>'items form-select'])->label(false) ?>
                                             </div>
                                             <div class="col-sm-2">
-                                                 <?= $form->field($modelRegistrationItem, "[{$i}]quantity")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'items form-control text-end'])->label(false) ?>
+                                                 <?= $form->field($modelRegistrationItem, "[{$i}]quantity")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'form-control text-center'])->label(false) ?>
                                             </div>
                                             <div class="col-sm-2">
-                                                 <?= $form->field($modelRegistrationItem, "[{$i}]rate")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'items form-control text-end','readonly'=>true])->label(false) ?>
+                                                 <?= $form->field($modelRegistrationItem, "[{$i}]rate")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'form-control text-end rate','readonly'=>true])->label(false) ?>
                                             </div>
                                             <div class="col-sm-3">
-                                                 <?= $form->field($modelRegistrationItem, "[{$i}]total")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'items form-control text-end','readonly'=>true])->label(false) ?>
+                                                 <?= $form->field($modelRegistrationItem, "[{$i}]total")->textInput(['placeholder'=>'','auto-complete'=>'off','class'=>'form-control text-end','readonly'=>true])->label(false) ?>
                                             </div>
                                         </div><!-- .row -->
                                     </div>
@@ -105,7 +102,31 @@ $item = ArrayHelper::map(Item::find()->where(['record_status'=>1])->all(),'id','
                         <?php endforeach; ?>
                     </div>
                 <?php DynamicFormWidget::end(); ?>
-            </div>   
+            </div>  
+            <div class="row">
+                <div class="col-md-2 offset-md-6">
+                    <label>Total</label>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($model, 'total')->textInput(['placeholder'=>'','auto-complete'=>'off','readonly'=>true])->label(false) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 offset-md-6">
+                    <label>Tax</label>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($model, 'tax')->textInput(['placeholder'=>'','auto-complete'=>'off','readonly'=>true])->label(false) ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 offset-md-6">
+                    <label>Grand Total</label>
+                </div>
+                <div class="col-md-2">
+                    <?= $form->field($model, 'grand_total')->textInput(['placeholder'=>'','auto-complete'=>'off','readonly'=>true])->label(false) ?>
+                </div>
+            </div>
     </section>
 
     <div class="form-group">
@@ -146,9 +167,43 @@ $this->registerJs(<<<JS
             alert("Limit reached");
         });
 
-        $("body").on("keyup",'.items', function(e) {
-            particularTotal();
-            gstCalculate();
+        // $("body").on("keyup",'.items', function(e) {
+        //     particularTotal();
+        //     gstCalculate();
+        // });
+
+                    
+        // $(document).on("click", ".item", function() {
+        //     var id = $(this).attr('id');
+        //     //test
+        //     values =[]; var i = 0;
+        //     $(".item").each(function() {
+        //     if(id != $(this).attr('id'))
+        //         if($(this).val().length > 0){
+        //         values[i] = parseInt($(this).val());
+        //         i++;
+        //         }
+        //     });
+        //     $("#"+id+" > option").each(function() {
+        //     var val = parseInt($(this).attr('value'));
+        //     if($.inArray(val,values) > -1){
+        //         $(this).prop('disabled', true);
+        //         $(this).css("color", "red")
+        //         }else{
+        //         $(this).prop('disabled', false);
+        //         $(this).css("color", "black")
+        //         }
+        //     });
+        //     //end
+        // });
+
+        $('body').on("change", ".items", function() {
+           var ids = $(this).attr('id');
+           var id = $(this).val();
+           $.post('$get_rate'+id,function(rate){
+                $('#registrationitem-0-item_id').closest('.row').find('.rate').val(rate);
+           });
+           
         });
     });
     

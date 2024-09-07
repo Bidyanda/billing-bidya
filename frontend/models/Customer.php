@@ -29,12 +29,13 @@ class Customer extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    public $total,$tax,$grand_total;
     public function rules()
     {
         return [
             [['name', 'address', 'created_by'], 'required'],
             [['address'], 'string'],
-            [['created_at','mobile_no'], 'safe'],
+            [['created_at','mobile_no','total','tax','grand_total'], 'safe'],
             [['created_by', 'record_status'], 'integer'],
             [['name'], 'string', 'max' => 255],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],

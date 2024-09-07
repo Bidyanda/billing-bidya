@@ -143,4 +143,9 @@ class ItemController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionGetRate($id){
+        $rate = Item::find()->asArray()->where(['id'=>$id])->one();
+        return $rate['rate'];
+    }
 }

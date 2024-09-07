@@ -48,10 +48,10 @@ class RegistrationItem extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'item_id' => 'Item ID',
+            'item_id' => 'Item',
             'quantity' => 'Quantity',
             'rate' => 'Rate',
-            'registration_id' => 'Registration ID',
+            'registration_id' => 'Registration',
             'total'=>'Amount'
         ];
     }
