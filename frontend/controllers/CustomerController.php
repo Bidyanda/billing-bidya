@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use frontend\models\Registration;
 use frontend\models\RegistrationItem;
+use frontend\models\CompanyDetails;
 /**
  * CustomerController implements the CRUD actions for Customer model.
  */
@@ -56,8 +57,10 @@ class CustomerController extends Controller
      */
     public function actionView($id)
     {
+        $company = CompanyDetails::find()->one();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'company' => $company
         ]);
     }
 

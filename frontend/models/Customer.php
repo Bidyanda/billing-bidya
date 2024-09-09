@@ -34,7 +34,7 @@ class Customer extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'address', 'created_by'], 'required'],
-            [['address'], 'string'],
+            [['address','district','state','pincode'], 'string'],
             [['created_at','mobile_no','total','tax','grand_total'], 'safe'],
             [['created_by', 'record_status'], 'integer'],
             [['name'], 'string', 'max' => 255],
@@ -54,7 +54,10 @@ class Customer extends \yii\db\ActiveRecord
             'created_at' => 'Created At',
             'created_by' => 'Created By',
             'record_status' => 'Record Status',
-            'mobile_no' => 'Mobile No'
+            'mobile_no' => 'Mobile No',
+            'district' => 'District',
+            'pincode' => 'Pincode',
+            'state' => 'State'
         ];
     }
 
